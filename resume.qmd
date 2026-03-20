@@ -1,5 +1,5 @@
 ---
-title: "Giovanna Moura"
+title: "Giovanna Maloy"
 format: html
 ---
 
@@ -12,6 +12,7 @@ I am a Data Science student at BYU-Idaho with an interest in cybersecurity and m
 - SQL
 - Data Visualization
 - Machine Learning
+- Cybersecurity
 
 # Projects
 - Data analysis reports using Polars
@@ -22,5 +23,5 @@ I am a Data Science student at BYU-Idaho with an interest in cybersecurity and m
 - BYU-Idaho Data Science Student
 
 # Contact
-- Email: your@email.com
+- Email: gigilizcruzmoura@gmail.com
 - GitHub: https://github.com/yourusername
