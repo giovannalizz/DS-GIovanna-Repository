@@ -1,10 +1,27 @@
 ---
-title: "about me"
-subtitle: "my data science portfolio"
+title: "About Me"
+subtitle: "My Data Science Portfolio"
 # use quarto markdown to 
 ---
 
-# Title 1 Header
-## Title 2 Header
+# I am a Data Science student at BYU-Idaho with an interest in cybersecurity and machine learning. I enjoy solving problems using data and building practical projects.
+## # Skills
+- Python
+- SQL
+- Data Visualization
+- Machine Learning
+- Cybersecurity
+
+# Projects
+- Data analysis reports using Polars
+- Machine learning models for prediction
+- Visualization dashboards
+
+# Experience
+- BYU-Idaho Data Science Student
+
+# Contact
+- Email: gigilizcruzmoura@gmail.com
+- GitHub: https://github.com/giovannalizz
 
 [MarkDown Basics](https://quarto.org/docs/authoring/markdown-basics.html#links-images)
