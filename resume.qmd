@@ -24,4 +24,4 @@ I am a Data Science student at BYU-Idaho with an interest in cybersecurity and m
 
 # Contact
 - Email: gigilizcruzmoura@gmail.com
-- GitHub: https://github.com/yourusername
+- GitHub: https://github.com/giovannalizz
