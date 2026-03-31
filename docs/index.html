@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>about me – Your_Name - Data Science Portfolio</title>
+<title>Client Report - Star Wars – Giovanna Maloy- Data Science Portfolio</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -248,7 +248,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Your_Name - Data Science Portfolio</span>
+    <span class="navbar-title">Giovanna Maloy- Data Science Portfolio</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -306,10 +306,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#title-1-header" id="toc-title-1-header" class="nav-link active" data-scroll-target="#title-1-header">Title 1 Header</a>
-  <ul class="collapse">
-  <li><a href="#title-2-header" id="toc-title-2-header" class="nav-link" data-scroll-target="#title-2-header">Title 2 Header</a></li>
-  </ul></li>
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link active" data-scroll-target="#executive-summary">Executive Summary</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -319,8 +319,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">about me</h1>
-<p class="subtitle lead">my data science portfolio</p>
+<h1 class="title">Client Report - Star Wars</h1>
+<p class="subtitle lead">Unit 5 Task 3</p>
 </div>
 
 
@@ -337,14 +337,31 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="title-1-header" class="level1">
-<h1>Title 1 Header</h1>
-<section id="title-2-header" class="level2">
-<h2 class="anchored" data-anchor-id="title-2-header">Title 2 Header</h2>
-<p><a href="https://quarto.org/docs/authoring/markdown-basics.html#links-images">MarkDown Basics</a></p>
-
-
+<section id="executive-summary" class="level2">
+<h2 class="anchored" data-anchor-id="executive-summary">Executive Summary</h2>
+<p>This report analyzes the Star Wars survey dataset and prepares it for a predictive machine learning model. The data was cleaned by removing unnecessary columns, handling missing values, and converting categorical variables into numeric format.</p>
+<p>Two visualizations were recreated to validate the dataset: average movie rankings and the number of Star Wars fans versus non-fans. These visuals confirm that the dataset was loaded and processed correctly.</p>
+<p>A Random Forest model was used to predict whether a respondent has a household income of $50,000 or greater. The model achieved an accuracy of 58.33%, which is above the required 55% threshold, showing that survey data can be used for basic predictive analysis.</p>
 </section>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<p>The dataset was loaded from the course website and converted into a Polars dataframe. Because the file contained extra lines at the top, those lines were skipped during loading.</p>
+<p>Two charts were recreated: one showing the number of Star Wars fans and non-fans, and another showing average movie rankings. These were used to validate the dataset.</p>
+<p>For the machine learning portion, unnecessary columns such as RespondentID and email were removed. A target variable was created based on household income. Respondents earning $50,000 or more were labeled as 1, and others as 0.</p>
+<p>Missing values were removed, and categorical variables were converted using encoding so they could be used in the model.</p>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<p>The Random Forest Classifier was trained using 70% of the data and tested on 30%.</p>
+<p>The model achieved an accuracy of 58.33%, which is above the required 55% threshold. This indicates that the model performs well enough to make reasonable predictions about income level.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>This project demonstrated how survey data can be cleaned and used for machine learning. After preprocessing and encoding the data, the model was able to predict income levels with acceptable accuracy.</p>
+<p>One limitation is that dropping missing values reduced the dataset size. Also, Star Wars preferences are not strong predictors of income, which limits model performance.</p>
+<p>Overall, the project successfully met the requirements and showed that basic predictive modeling is possible with this dataset.</p>
+
+
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
