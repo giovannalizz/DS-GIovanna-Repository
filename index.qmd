@@ -1,36 +1,223 @@
 ---
-title: "Client Report - Star Wars"
+title: "Client Report - Star Wars for Dummies"
 subtitle: "Unit 5 Task 3"
+author: "Giovanna Maloy"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
 ---
+
+```{python}
+import polars as pl
+import pandas as pd
+import numpy as np
+from lets_plot import *
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+LetsPlot.setup_html(isolated_frame=True)
+```
+
+```{python}
+url = "https://byuidatascience.github.io/DS250-Course-Polars/Data/StarWars_with_emails.csv"
+
+df_pd = pd.read_csv(url, skiprows=10)
+df = pl.from_pandas(df_pd)
+
+df.head()
+```
+
+```{python}
+print(df.columns)
+```
+
+```{python}
+fan_counts = df.group_by("star_wars_fan").len()
+
+ggplot(fan_counts, aes(
+    x="star_wars_fan",
+    y="len"
+)) + \
+    geom_bar(stat="identity") + \
+    labs(
+        title="Star Wars Fans vs Non-Fans",
+        x="Fan Status",
+        y="Count"
+    )
+```
+
+```{python}
+rank_summary = pl.DataFrame({
+    "movie": [
+        "Episode I",
+        "Episode II",
+        "Episode III",
+        "Episode IV",
+        "Episode V",
+        "Episode VI"
+    ],
+    "avg_rank": [
+        df["rank_episode_I"].cast(pl.Float64, strict=False).mean(),
+        df["rank_episode_II"].cast(pl.Float64, strict=False).mean(),
+        df["rank_episode_III"].cast(pl.Float64, strict=False).mean(),
+        df["rank_episode_IV"].cast(pl.Float64, strict=False).mean(),
+        df["rank_episode_V"].cast(pl.Float64, strict=False).mean(),
+        df["rank_episode_VI"].cast(pl.Float64, strict=False).mean()
+    ]
+})
+
+ggplot(rank_summary, aes(x="movie", y="avg_rank")) + \
+    geom_bar(stat="identity") + \
+    coord_flip() + \
+    labs(
+        title="Average Ranking of Star Wars Movies",
+        x="Movie",
+        y="Average Rank"
+    )
+```
+
+```{python}
+df_ml = df.drop([
+    "RespondentID",
+    "email"
+])
+
+df_ml = df_ml.with_columns(
+    pl.when(
+        pl.col("household_income").is_in([
+            "$50,000 - $99,999",
+            "$100,000 - $149,999",
+            "$150,000+"
+        ])
+    )
+    .then(1)
+    .otherwise(0)
+    .alias("target")
+)
+
+df_ml = df_ml.drop("household_income")
+
+df_ml = df_ml.drop_nulls()
+
+df_ml.head()
+```
+
+```{python}
+df_pd = df_ml.to_pandas()
+
+df_pd = pd.get_dummies(df_pd, drop_first=False)
+
+X = df_pd.drop("target", axis=1)
+y = df_pd["target"]
+
+X.head()
+```
+
+```{python}
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42
+)
+
+model = RandomForestClassifier(random_state=42)
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+
+```
+
+```{python}
+accuracy
+```
 
 ## Executive Summary
 
-This report analyzes the Star Wars survey dataset and prepares it for a predictive machine learning model. The data was cleaned by removing unnecessary columns, handling missing values, and converting categorical variables into numeric format.
+## Executive Summary
 
-Two visualizations were recreated to validate the dataset: average movie rankings and the number of Star Wars fans versus non-fans. These visuals confirm that the dataset was loaded and processed correctly.
+This report analyzes the Star Wars survey dataset and prepares it for a predictive machine learning model. The data was cleaned by removing unnecessary columns, handling missing values, and converting categorical variables into numeric format using one-hot encoding.
 
-A Random Forest model was used to predict whether a respondent has a household income of $50,000 or greater. The model achieved an accuracy of 58.33%, which is above the required 55% threshold, showing that survey data can be used for basic predictive analysis.
+Two visualizations were recreated to validate the dataset: average movie rankings and the number of Star Wars fans versus non-fans. These visuals helped confirm that the dataset was loaded and prepared correctly.
+
+A Random Forest model was used to predict whether a respondent has a household income of $50,000 or greater. The model achieved an accuracy of 58.33%, which is above the required 55% threshold, showing that survey responses can be used to make reasonable predictions about income.
 
 ## Methods
 
-The dataset was loaded from the course website and converted into a Polars dataframe. Because the file contained extra lines at the top, those lines were skipped during loading.
+The Star Wars survey dataset was loaded from the course website and converted into a Polars dataframe. Because the file contained extra lines at the top, the first 10 rows were skipped when reading the data.
 
-Two charts were recreated: one showing the number of Star Wars fans and non-fans, and another showing average movie rankings. These were used to validate the dataset.
+Next, I recreated two visuals from the article: average movie rankings and the number of Star Wars fans versus non-fans. These charts were used to confirm that the data loaded correctly.
 
-For the machine learning portion, unnecessary columns such as RespondentID and email were removed. A target variable was created based on household income. Respondents earning $50,000 or more were labeled as 1, and others as 0.
+For the machine learning portion, I removed unnecessary columns including RespondentID and email. Then I created a target variable to indicate whether a respondent had a household income of $50,000 or greater. Respondents in the $50,000 and higher categories were coded as 1, while all others were coded as 0.
 
-Missing values were removed, and categorical variables were converted using encoding so they could be used in the model.
+After that, I removed the original household_income column and dropped rows with missing values. I then applied one-hot encoding so that the remaining categorical variables could be used in a Random Forest classification model.
+
+## Validation (Stretch)
+
+To validate that the dataset matches the original FiveThirtyEight article, I recreated two key visualizations: average movie rankings and the number of Star Wars fans versus non-fans.
+
+The first visualization shows the average ranking for each Star Wars episode. The results follow the same general pattern as the article, where the original trilogy (Episodes IV, V, and VI) tends to receive better rankings than the prequel trilogy. This confirms that the ranking data in the dataset aligns with the published results.
+
+The second visualization shows the number of respondents who consider themselves Star Wars fans versus non-fans. The chart shows a clear majority of respondents identifying as fans, which is consistent with expectations from the article.
+
+Although the visualizations are not exact replicas, they are close enough in structure and values to validate that the dataset is accurate and correctly loaded.
+
+```{python}
+fan_counts = df.group_by("star_wars_fan").len().sort("len", descending=True)
+
+ggplot(fan_counts, aes(
+    x="star_wars_fan",
+    y="len"
+)) + \
+    geom_bar(stat="identity") + \
+    labs(
+        title="Star Wars Fans vs Non-Fans",
+        x="Fan Status",
+        y="Count"
+    )
+```
+
+```{python}
+ggplot(rank_summary, aes(x="movie", y="avg_rank")) + \
+    geom_bar(stat="identity") + \
+    coord_flip() + \
+    labs(
+        title="Average Ranking of Star Wars Movies (Lower is Better)",
+        x="Movie",
+        y="Average Rank"
+    )
+```
 
 ## Results
 
-The Random Forest Classifier was trained using 70% of the data and tested on 30%.
+A Random Forest Classifier was used to predict whether a respondent had a household income of $50,000 or greater. The dataset was split into training and testing sets, with 70% used for training and 30% used for testing.
 
-The model achieved an accuracy of 58.33%, which is above the required 55% threshold. This indicates that the model performs well enough to make reasonable predictions about income level.
+The model achieved an accuracy of 58.33%, which is above the required 55% threshold. This shows that the model performs well enough to make reasonable predictions about income level based on survey responses.
+
+Although the accuracy is modest, this is expected because preferences about Star Wars are not strongly related to income.
 
 ## Conclusion
 
-This project demonstrated how survey data can be cleaned and used for machine learning. After preprocessing and encoding the data, the model was able to predict income levels with acceptable accuracy.
+This project demonstrated how survey data can be cleaned and prepared for machine learning. After removing unnecessary columns, creating a target variable, and encoding categorical variables, the model was able to predict whether a respondent had a household income of at least $50,000.
 
-One limitation is that dropping missing values reduced the dataset size. Also, Star Wars preferences are not strong predictors of income, which limits model performance.
+One limitation is that dropping missing values reduces the amount of available data. Additionally, preferences about Star Wars may not strongly relate to income, which limits prediction accuracy.
 
-Overall, the project successfully met the requirements and showed that basic predictive modeling is possible with this dataset.
+Overall, the model successfully met the required accuracy and showed that survey data can be used for basic predictive analysis.
