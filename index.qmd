@@ -32,7 +32,7 @@ import numpy as np
 from lets_plot import *
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score
 
 LetsPlot.setup_html(isolated_frame=True)
 ```
@@ -43,12 +43,25 @@ url = "https://byuidatascience.github.io/DS250-Course-Polars/Data/StarWars_with_
 df_pd = pd.read_csv(url, skiprows=10)
 df = pl.from_pandas(df_pd)
 
-df.head()
 ```
 
-```{python}
-print(df.columns)
-```
+## Executive Summary
+
+This report analyzes the Star Wars survey dataset and prepares it for a predictive machine learning model. The data was cleaned by removing unnecessary columns, handling missing values, and converting categorical variables into numeric format using one-hot encoding.
+
+Two visualizations were recreated to validate the dataset: average movie rankings and the number of Star Wars fans versus non-fans. These visuals helped confirm that the dataset was loaded and prepared correctly.
+
+A Random Forest model was used to predict whether a respondent has a household income of $50,000 or greater. The model achieved an accuracy of 58.33%, which is above the required 55% threshold, showing that survey responses can be used to make reasonable predictions about income.
+
+## Methods
+
+The Star Wars survey dataset was loaded from the course website and converted into a Polars dataframe. Because the file contained extra lines at the top, the first 10 rows were skipped when reading the data.
+
+Next, I recreated two visuals from the article: average movie rankings and the number of Star Wars fans versus non-fans. These charts were used to confirm that the data loaded correctly.
+
+For the machine learning portion, I removed unnecessary columns including RespondentID and email. Then I created a target variable to indicate whether a respondent had a household income of $50,000 or greater. Respondents in the $50,000 and higher categories were coded as 1, while all others were coded as 0.
+
+After that, I removed the original household_income column and dropped rows with missing values. I then applied one-hot encoding so that the remaining categorical variables could be used in a Random Forest classification model.
 
 ```{python}
 fan_counts = df.group_by("star_wars_fan").len()
@@ -129,46 +142,7 @@ df_pd = pd.get_dummies(df_pd, drop_first=False)
 X = df_pd.drop("target", axis=1)
 y = df_pd["target"]
 
-X.head()
 ```
-
-```{python}
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.3, random_state=42
-)
-
-model = RandomForestClassifier(random_state=42)
-model.fit(X_train, y_train)
-
-y_pred = model.predict(X_test)
-
-accuracy = accuracy_score(y_test, y_pred)
-
-```
-
-```{python}
-accuracy
-```
-
-## Executive Summary
-
-## Executive Summary
-
-This report analyzes the Star Wars survey dataset and prepares it for a predictive machine learning model. The data was cleaned by removing unnecessary columns, handling missing values, and converting categorical variables into numeric format using one-hot encoding.
-
-Two visualizations were recreated to validate the dataset: average movie rankings and the number of Star Wars fans versus non-fans. These visuals helped confirm that the dataset was loaded and prepared correctly.
-
-A Random Forest model was used to predict whether a respondent has a household income of $50,000 or greater. The model achieved an accuracy of 58.33%, which is above the required 55% threshold, showing that survey responses can be used to make reasonable predictions about income.
-
-## Methods
-
-The Star Wars survey dataset was loaded from the course website and converted into a Polars dataframe. Because the file contained extra lines at the top, the first 10 rows were skipped when reading the data.
-
-Next, I recreated two visuals from the article: average movie rankings and the number of Star Wars fans versus non-fans. These charts were used to confirm that the data loaded correctly.
-
-For the machine learning portion, I removed unnecessary columns including RespondentID and email. Then I created a target variable to indicate whether a respondent had a household income of $50,000 or greater. Respondents in the $50,000 and higher categories were coded as 1, while all others were coded as 0.
-
-After that, I removed the original household_income column and dropped rows with missing values. I then applied one-hot encoding so that the remaining categorical variables could be used in a Random Forest classification model.
 
 ## Validation (Stretch)
 
@@ -210,9 +184,29 @@ ggplot(rank_summary, aes(x="movie", y="avg_rank")) + \
 
 A Random Forest Classifier was used to predict whether a respondent had a household income of $50,000 or greater. The dataset was split into training and testing sets, with 70% used for training and 30% used for testing.
 
+
+```{python}
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42
+)
+
+model = RandomForestClassifier(random_state=42)
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+
+```
+
+```{python}
+accuracy
+```
+
 The model achieved an accuracy of 58.33%, which is above the required 55% threshold. This shows that the model performs well enough to make reasonable predictions about income level based on survey responses.
 
 Although the accuracy is modest, this is expected because preferences about Star Wars are not strongly related to income.
+
 
 ## Conclusion
 
@@ -221,3 +215,8 @@ This project demonstrated how survey data can be cleaned and prepared for machin
 One limitation is that dropping missing values reduces the amount of available data. Additionally, preferences about Star Wars may not strongly relate to income, which limits prediction accuracy.
 
 Overall, the model successfully met the required accuracy and showed that survey data can be used for basic predictive analysis.
+
+
+
+
+
